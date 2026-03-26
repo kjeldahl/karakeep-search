@@ -138,9 +138,13 @@ function injectOverlay(results) {
 
   const rhs = ensureRhs();
 
+  // Ensure #rhs has enough width for the overlay
+  rhs.style.minWidth = "366px";
+
   if (!shadowHost) {
     shadowHost = document.createElement("div");
     shadowHost.id = "karakeep-overlay-host";
+    shadowHost.style.width = "366px";
     shadowRoot = shadowHost.attachShadow({ mode: "closed" });
     rhs.prepend(shadowHost);
   }
