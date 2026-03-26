@@ -52,6 +52,9 @@ function renderError(error) {
   });
 }
 
+// Request search for current tab on sidebar open
+browser.runtime.sendMessage({ type: "sidebarOpened" }).catch(() => {});
+
 browser.runtime.onMessage.addListener((msg) => {
   if (msg.query) currentQuery = msg.query;
   if (msg.type === "loading") {

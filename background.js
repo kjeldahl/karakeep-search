@@ -56,6 +56,25 @@ browser.runtime.onMessage.addListener((msg) => {
       .catch((err) => ({ ok: false, error: err.message }));
   }
 
+  if (msg.type === "sidebarOpened") {
+    return (async () => {
+      const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+      if (!tab?.url) return;
+      const query = extractQuery(tab.url);
+      if (!query) return;
+      const config = await getConfig();
+      if (!config.serverUrl || !config.apiKey) return;
+      lastQuery = query;
+      browser.runtime.sendMessage({ type: "loading", query }).catch(() => {});
+      try {
+        const results = await searchBookmarks(config.serverUrl, config.apiKey, query);
+        browser.runtime.sendMessage({ type: "results", query, results }).catch(() => {});
+      } catch (err) {
+        browser.runtime.sendMessage({ type: "error", query, error: err.message }).catch(() => {});
+      }
+    })();
+  }
+
   if (msg.type === "retry" && lastQuery) {
     (async () => {
       const config = await getConfig();
