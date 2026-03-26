@@ -36,11 +36,5 @@
       "js": ["content/overlay.js"],
       "run_at": "document_idle"
     }
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": ["content/overlay.css"],
-      "matches": ["*://www.google.*/search*"]
-    }
   ]
 }

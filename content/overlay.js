@@ -1,5 +1,88 @@
 // Content Script — injects Karakeep overlay into Google search results
 
+const OVERLAY_CSS = `
+:host {
+  all: initial;
+  display: block;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #202124;
+}
+.karakeep-overlay {
+  background: #fff;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  max-width: 366px;
+  box-sizing: border-box;
+}
+.karakeep-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #dadce0;
+}
+.karakeep-header-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1967d2;
+  margin: 0;
+}
+.karakeep-dismiss {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #5f6368;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+.karakeep-dismiss:hover { color: #202124; }
+.karakeep-result {
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #ebebeb;
+}
+.karakeep-result:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.karakeep-result a {
+  color: #1a0dab;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.karakeep-result a:hover { text-decoration: underline; }
+.karakeep-result-url {
+  color: #006621;
+  font-size: 12px;
+  margin: 2px 0 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.karakeep-result-desc {
+  color: #4d5156;
+  font-size: 13px;
+  line-height: 1.4;
+  margin: 0 0 4px;
+}
+.karakeep-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.karakeep-tag {
+  background: #e8f0fe;
+  color: #1967d2;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+`;
+
 let shadowHost = null;
 let shadowRoot = null;
 let dismissed = false;
@@ -62,9 +145,8 @@ function injectOverlay(results) {
     rhs.prepend(shadowHost);
   }
 
-  // Fetch CSS and inject into shadow DOM
-  const cssUrl = browser.runtime.getURL("content/overlay.css");
-  shadowRoot.innerHTML = `<link rel="stylesheet" href="${cssUrl}">${buildOverlay(results)}`;
+  // Inline CSS into shadow DOM
+  shadowRoot.innerHTML = `<style>${OVERLAY_CSS}</style>${buildOverlay(results)}`;
 
   // Dismiss handler
   shadowRoot.querySelector(".karakeep-dismiss").addEventListener("click", () => {
