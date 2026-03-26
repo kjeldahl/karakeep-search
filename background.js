@@ -1,9 +1,31 @@
 // Background Script — orchestrator
-import { getConfig } from "./src/config.js";
+import { getConfig, setSidebarEnabled } from "./src/config.js";
 import { searchBookmarks } from "./src/karakeep-client.js";
 import { extractQuery } from "./src/query-extractor.js";
 
 let lastQuery = null;
+
+// Update toolbar badge to reflect toggle state
+async function updateBadge(enabled) {
+  const text = enabled ? "" : "OFF";
+  const color = enabled ? "#1967d2" : "#999";
+  await browser.action.setBadgeText({ text });
+  await browser.action.setBadgeBackgroundColor({ color });
+  await browser.action.setTitle({
+    title: enabled ? "Karakeep Search (on)" : "Karakeep Search (off)",
+  });
+}
+
+// Init badge on startup
+getConfig().then((c) => updateBadge(c.sidebarEnabled));
+
+// Toggle on toolbar button click
+browser.action.onClicked.addListener(async () => {
+  const config = await getConfig();
+  const newState = !config.sidebarEnabled;
+  await setSidebarEnabled(newState);
+  await updateBadge(newState);
+});
 
 browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (changeInfo.status !== "complete") return;
