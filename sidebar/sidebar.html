@@ -4,9 +4,66 @@
   <meta charset="utf-8">
   <title>Karakeep Search</title>
   <style>
-    body { font-family: system-ui, sans-serif; padding: 12px; margin: 0; font-size: 13px; }
+    body { font-family: system-ui, sans-serif; padding: 12px; margin: 0; font-size: 13px; color: #333; }
     h3 { margin: 0 0 8px; font-size: 14px; }
     .empty { color: #666; }
+
+    /* Skeleton loading */
+    .skeleton-card { margin-bottom: 14px; }
+    .skeleton-line {
+      background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 4px;
+      height: 14px;
+      margin-bottom: 6px;
+    }
+    .skeleton-line.title { width: 75%; height: 16px; }
+    .skeleton-line.url { width: 90%; height: 12px; }
+    .skeleton-line.desc { width: 100%; height: 12px; }
+    .skeleton-line.tags { width: 40%; height: 12px; }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Result cards */
+    .result-card {
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #eee;
+    }
+    .result-card:last-child { border-bottom: none; }
+    .result-card a {
+      color: #1a0dab;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 1.3;
+    }
+    .result-card a:hover { text-decoration: underline; }
+    .result-url {
+      color: #006621;
+      font-size: 12px;
+      margin: 2px 0 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .result-desc {
+      color: #555;
+      font-size: 12px;
+      line-height: 1.4;
+      margin: 0 0 4px;
+    }
+    .result-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+    .tag {
+      background: #e8f0fe;
+      color: #1967d2;
+      font-size: 11px;
+      padding: 1px 6px;
+      border-radius: 3px;
+    }
   </style>
 </head>
 <body>
