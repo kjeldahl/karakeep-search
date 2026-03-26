@@ -41,6 +41,16 @@ const OVERLAY_CSS = `
   line-height: 1;
 }
 .karakeep-dismiss:hover { color: #202124; }
+.karakeep-results { }
+.karakeep-overlay.collapsed .karakeep-results { display: none; }
+.karakeep-overlay.collapsed .karakeep-header { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.karakeep-count {
+  font-size: 12px;
+  color: #5f6368;
+  margin-left: 6px;
+  display: none;
+}
+.karakeep-overlay.collapsed .karakeep-count { display: inline; }
 .karakeep-result {
   margin-bottom: 14px;
   padding-bottom: 14px;
@@ -99,6 +109,9 @@ const OVERLAY_CSS = `
 :host(.dark) .karakeep-dismiss {
   color: #9aa0a6;
 }
+:host(.dark) .karakeep-count {
+  color: #9aa0a6;
+}
 :host(.dark) .karakeep-dismiss:hover {
   color: #bdc1c6;
 }
@@ -122,7 +135,7 @@ const OVERLAY_CSS = `
 
 let shadowHost = null;
 let shadowRoot = null;
-let dismissed = false;
+let collapsed = false;
 
 function isDarkMode() {
   // Check Google's dark mode attribute (html[data-darkmode="true"] or body has dark class)
@@ -183,18 +196,16 @@ function buildOverlay(results) {
     </div>`;
   }).join("");
 
-  return `<div class="karakeep-overlay">
+  return `<div class="karakeep-overlay${collapsed ? " collapsed" : ""}">
     <div class="karakeep-header">
-      <span class="karakeep-header-title">Karakeep</span>
-      <button class="karakeep-dismiss" aria-label="Dismiss">&times;</button>
+      <span class="karakeep-header-title">Karakeep<span class="karakeep-count">(${results.length})</span></span>
+      <button class="karakeep-dismiss" aria-label="Toggle">${collapsed ? "&#x25B6;" : "&#x25BC;"}</button>
     </div>
-    ${cards}
+    <div class="karakeep-results">${cards}</div>
   </div>`;
 }
 
 function injectOverlay(results) {
-  if (dismissed) return;
-
   const rhs = ensureRhs();
 
   // Ensure #rhs has enough width for the overlay
@@ -213,12 +224,12 @@ function injectOverlay(results) {
 
   applyTheme();
 
-  // Dismiss handler
+  // Toggle collapse handler
   shadowRoot.querySelector(".karakeep-dismiss").addEventListener("click", () => {
-    dismissed = true;
-    shadowHost.remove();
-    shadowHost = null;
-    shadowRoot = null;
+    collapsed = !collapsed;
+    const overlay = shadowRoot.querySelector(".karakeep-overlay");
+    overlay.classList.toggle("collapsed", collapsed);
+    shadowRoot.querySelector(".karakeep-dismiss").innerHTML = collapsed ? "&#x25B6;" : "&#x25BC;";
   });
 }
 
@@ -233,7 +244,6 @@ function removeOverlay() {
 // Listen for results from background script
 browser.runtime.onMessage.addListener((msg) => {
   if (msg.type === "karakeep-results") {
-    dismissed = false; // new search resets dismiss
     injectOverlay(msg.results);
   }
 });
