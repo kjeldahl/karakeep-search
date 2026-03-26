@@ -78,6 +78,22 @@
       cursor: pointer;
     }
     .retry-btn:hover { background: #1558b0; }
+
+    /* Dark mode */
+    @media (prefers-color-scheme: dark) {
+      body { background: #303134; color: #bdc1c6; }
+      h3 { color: #bdc1c6; }
+      .empty { color: #9aa0a6; }
+      .skeleton-line { background: linear-gradient(90deg, #3c4043 25%, #4a4a4d 50%, #3c4043 75%); background-size: 200% 100%; }
+      .result-card { border-bottom-color: #3c4043; }
+      .result-card a { color: #8ab4f8; }
+      .result-url { color: #bdc1c6; }
+      .result-desc { color: #9aa0a6; }
+      .tag { background: #394457; color: #8ab4f8; }
+      .error-msg { color: #f28b82; }
+      .retry-btn { background: #8ab4f8; color: #303134; }
+      .retry-btn:hover { background: #aecbfa; }
+    }
   </style>
 </head>
 <body>

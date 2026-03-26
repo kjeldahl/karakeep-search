@@ -81,11 +81,70 @@ const OVERLAY_CSS = `
   padding: 2px 8px;
   border-radius: 4px;
 }
+
+/* Dark mode */
+:host(.dark) {
+  color: #bdc1c6;
+}
+:host(.dark) .karakeep-overlay {
+  background: #303134;
+  border-color: #5f6368;
+}
+:host(.dark) .karakeep-header {
+  border-bottom-color: #5f6368;
+}
+:host(.dark) .karakeep-header-title {
+  color: #8ab4f8;
+}
+:host(.dark) .karakeep-dismiss {
+  color: #9aa0a6;
+}
+:host(.dark) .karakeep-dismiss:hover {
+  color: #bdc1c6;
+}
+:host(.dark) .karakeep-result {
+  border-bottom-color: #3c4043;
+}
+:host(.dark) .karakeep-result a {
+  color: #8ab4f8;
+}
+:host(.dark) .karakeep-result-url {
+  color: #bdc1c6;
+}
+:host(.dark) .karakeep-result-desc {
+  color: #9aa0a6;
+}
+:host(.dark) .karakeep-tag {
+  background: #394457;
+  color: #8ab4f8;
+}
 `;
 
 let shadowHost = null;
 let shadowRoot = null;
 let dismissed = false;
+
+function isDarkMode() {
+  // Check Google's dark mode attribute (html[data-darkmode="true"] or body has dark class)
+  if (document.documentElement.getAttribute("data-darkmode") === "true") return true;
+  if (document.body?.classList.contains("srp-dark")) return true;
+  // Fall back to system/browser preference
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+
+function applyTheme() {
+  if (!shadowHost) return;
+  shadowHost.classList.toggle("dark", isDarkMode());
+}
+
+// React to live system theme changes
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
+
+// React to Google's dark mode attribute changes
+new MutationObserver(applyTheme).observe(document.documentElement, {
+  attributes: true,
+  attributeFilter: ["data-darkmode"],
+});
 
 function escapeHtml(str) {
   const div = document.createElement("div");
@@ -151,6 +210,8 @@ function injectOverlay(results) {
 
   // Inline CSS into shadow DOM
   shadowRoot.innerHTML = `<style>${OVERLAY_CSS}</style>${buildOverlay(results)}`;
+
+  applyTheme();
 
   // Dismiss handler
   shadowRoot.querySelector(".karakeep-dismiss").addEventListener("click", () => {
