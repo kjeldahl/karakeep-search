@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Karakeep Search",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "karakeep-search@example.com"
+    }
+  },
+  "version": "1.0",
+  "description": "Search your Karakeep bookmarks alongside Google results",
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "type": "module"
+  },
+  "sidebar_action": {
+    "default_title": "Karakeep Search",
+    "default_panel": "sidebar/sidebar.html"
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": false
+  }
+}
