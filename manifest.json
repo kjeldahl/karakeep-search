@@ -19,9 +19,6 @@
     "scripts": ["background.js"],
     "type": "module"
   },
-  "action": {
-    "default_title": "Toggle Karakeep Search"
-  },
   "sidebar_action": {
     "default_title": "Karakeep Search",
     "default_panel": "sidebar/sidebar.html"
