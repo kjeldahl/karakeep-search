@@ -23,7 +23,7 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     browser.runtime.sendMessage({ type: "results", query, results }).catch(() => {});
     // Send to content script overlay if there are results
     if (results.length > 0) {
-      browser.tabs.sendMessage(tabId, { type: "karakeep-results", results, query }).catch(() => {});
+      browser.tabs.sendMessage(tabId, { type: "karakeep-results", results, query, serverUrl: config.serverUrl }).catch(() => {});
     }
   } catch (err) {
     browser.runtime.sendMessage({ type: "error", query, error: err.message }).catch(() => {});

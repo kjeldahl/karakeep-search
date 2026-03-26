@@ -136,6 +136,7 @@ const OVERLAY_CSS = `
 let shadowHost = null;
 let shadowRoot = null;
 let collapsed = false;
+let currentServerUrl = "";
 
 function isDarkMode() {
   // Check Google's dark mode attribute (html[data-darkmode="true"] or body has dark class)
@@ -189,7 +190,7 @@ function buildOverlay(results) {
       ? `<p class="karakeep-result-desc">${escapeHtml(r.description)}</p>`
       : "";
     return `<div class="karakeep-result">
-      <a href="${escapeHtml(r.url)}" target="_blank" rel="noopener">${escapeHtml(r.title)}</a>
+      <a href="${escapeHtml(r.url)}" data-karakeep-id="${escapeHtml(r.id)}" target="_blank" rel="noopener">${escapeHtml(r.title)}</a>
       <div class="karakeep-result-url">${escapeHtml(r.url)}</div>
       ${desc}
       ${tags}
@@ -231,6 +232,17 @@ function injectOverlay(results) {
     overlay.classList.toggle("collapsed", collapsed);
     shadowRoot.querySelector(".karakeep-dismiss").innerHTML = collapsed ? "&#x25B6;" : "&#x25BC;";
   });
+
+  // Alt/Shift+click navigates to Karakeep page instead of original URL
+  shadowRoot.querySelectorAll(".karakeep-result a").forEach((link) => {
+    link.addEventListener("click", (e) => {
+      if (e.altKey || e.shiftKey) {
+        e.preventDefault();
+        const id = link.getAttribute("data-karakeep-id");
+        window.open(`${currentServerUrl}/dashboard/preview/${id}`, "_blank");
+      }
+    });
+  });
 }
 
 function removeOverlay() {
@@ -244,6 +256,7 @@ function removeOverlay() {
 // Listen for results from background script
 browser.runtime.onMessage.addListener((msg) => {
   if (msg.type === "karakeep-results") {
+    currentServerUrl = msg.serverUrl || "";
     injectOverlay(msg.results);
   }
 });
