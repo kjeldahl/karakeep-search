@@ -32,7 +32,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://www.google.*/search*"],
+      "matches": ["<all_urls>"],
       "js": ["content/overlay.js"],
       "run_at": "document_idle"
     }
