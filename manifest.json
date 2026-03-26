@@ -29,5 +29,18 @@
   "options_ui": {
     "page": "options/options.html",
     "open_in_tab": false
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://www.google.*/search*"],
+      "js": ["content/overlay.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["content/overlay.css"],
+      "matches": ["*://www.google.*/search*"]
+    }
+  ]
 }

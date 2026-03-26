@@ -43,8 +43,13 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   try {
     const results = await searchBookmarks(config.serverUrl, config.apiKey, query);
     browser.runtime.sendMessage({ type: "results", query, results }).catch(() => {});
+    // Send to content script overlay if there are results
+    if (results.length > 0) {
+      browser.tabs.sendMessage(tabId, { type: "karakeep-results", results, query }).catch(() => {});
+    }
   } catch (err) {
     browser.runtime.sendMessage({ type: "error", query, error: err.message }).catch(() => {});
+    console.error("Karakeep search error:", err);
   }
 });
 
