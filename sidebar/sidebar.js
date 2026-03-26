@@ -1,5 +1,6 @@
 // Sidebar UI — displays Karakeep search results
 const content = document.getElementById("content");
+let currentQuery = null;
 
 function escapeHtml(str) {
   const div = document.createElement("div");
@@ -19,9 +20,9 @@ function renderSkeleton() {
   content.innerHTML = cards;
 }
 
-function renderResults(results) {
+function renderResults(query, results) {
   if (results.length === 0) {
-    content.innerHTML = `<p class="empty">No bookmarks found.</p>`;
+    content.innerHTML = `<p class="empty">No bookmarks found for &ldquo;${escapeHtml(query)}&rdquo;</p>`;
     return;
   }
   content.innerHTML = results.map((r) => {
@@ -41,14 +42,22 @@ function renderResults(results) {
 }
 
 function renderError(error) {
-  content.innerHTML = `<p class="empty" style="color:#d93025">${escapeHtml(error)}</p>`;
+  content.innerHTML = `<div class="error-state">
+    <p class="error-msg">${escapeHtml(error)}</p>
+    <button id="retry-btn" class="retry-btn">Retry</button>
+  </div>`;
+  document.getElementById("retry-btn").addEventListener("click", () => {
+    renderSkeleton();
+    browser.runtime.sendMessage({ type: "retry" }).catch(() => {});
+  });
 }
 
 browser.runtime.onMessage.addListener((msg) => {
+  if (msg.query) currentQuery = msg.query;
   if (msg.type === "loading") {
     renderSkeleton();
   } else if (msg.type === "results") {
-    renderResults(msg.results);
+    renderResults(msg.query || currentQuery, msg.results);
   } else if (msg.type === "error") {
     renderError(msg.error);
   }

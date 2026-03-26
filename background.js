@@ -33,4 +33,17 @@ browser.runtime.onMessage.addListener((msg) => {
       .then(() => ({ ok: true }))
       .catch((err) => ({ ok: false, error: err.message }));
   }
+
+  if (msg.type === "retry" && lastQuery) {
+    (async () => {
+      const config = await getConfig();
+      if (!config.serverUrl || !config.apiKey) return;
+      try {
+        const results = await searchBookmarks(config.serverUrl, config.apiKey, lastQuery);
+        browser.runtime.sendMessage({ type: "results", query: lastQuery, results }).catch(() => {});
+      } catch (err) {
+        browser.runtime.sendMessage({ type: "error", query: lastQuery, error: err.message }).catch(() => {});
+      }
+    })();
+  }
 });
