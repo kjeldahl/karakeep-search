@@ -42,6 +42,21 @@ describe("searchBookmarks", () => {
     ]);
   });
 
+  it("encodes spaces in query parameter", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ bookmarks: [] }),
+    }));
+
+    await searchBookmarks("https://karakeep.example.com", "key123", "ruby on rails");
+
+    const callUrl = fetch.mock.calls[0][0];
+    expect(callUrl).toContain("/api/v1/bookmarks/search?");
+    expect(callUrl).toContain("q=ruby+on+rails");
+    // Should NOT contain raw spaces
+    expect(callUrl).not.toContain("q=ruby on rails");
+  });
+
   it("throws on 401 auth error", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
       ok: false,

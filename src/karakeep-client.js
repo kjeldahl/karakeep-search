@@ -1,7 +1,8 @@
 // Karakeep Client — wraps GET /api/v1/bookmarks/search
 
 export async function searchBookmarks(serverUrl, apiKey, query, limit = 10) {
-  const url = `${serverUrl}/api/v1/bookmarks/search?q=${encodeURIComponent(query)}&limit=${limit}`;
+  const params = new URLSearchParams({ q: query, limit: String(limit) });
+  const url = `${serverUrl}/api/v1/bookmarks/search?${params}`;
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 10000);
