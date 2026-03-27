@@ -15,7 +15,8 @@
   },
   "permissions": [
     "storage",
-    "tabs"
+    "tabs",
+    "theme"
   ],
   "host_permissions": [
     "<all_urls>"
