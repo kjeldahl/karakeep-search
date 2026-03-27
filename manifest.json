@@ -28,8 +28,8 @@
     "default_title": "Karakeep Search",
     "default_panel": "sidebar/sidebar.html",
     "default_icon": {
-      "48": "icons/icon-48.png",
-      "96": "icons/icon-96.png"
+      "48": "icons/icon-light-48.png",
+      "96": "icons/icon-light-96.png"
     }
   },
   "options_ui": {
