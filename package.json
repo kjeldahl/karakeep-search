@@ -1,15 +1,14 @@
 {
-  "name": "2026-03-26-karakeep-search",
+  "name": "karakeep-search",
   "version": "1.0.0",
-  "description": "",
-  "main": "background.js",
+  "description": "Firefox extension for Karakeep bookmark search on Google",
   "scripts": {
-    "test": "vitest run"
+    "test": "vitest run",
+    "build": "node scripts/build.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "keywords": ["firefox", "extension", "karakeep", "bookmarks"],
+  "author": "Jacob Kjeldahl",
+  "license": "MIT",
   "devDependencies": {
     "vitest": "^4.1.2"
   }
