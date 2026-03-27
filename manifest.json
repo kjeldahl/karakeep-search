@@ -30,19 +30,7 @@
     "default_icon": {
       "48": "icons/icon-48.png",
       "96": "icons/icon-96.png"
-    },
-    "theme_icons": [
-      {
-        "light": "icons/icon-48.png",
-        "dark": "icons/icon-light-48.png",
-        "size": 48
-      },
-      {
-        "light": "icons/icon-96.png",
-        "dark": "icons/icon-light-96.png",
-        "size": 96
-      }
-    ]
+    }
   },
   "options_ui": {
     "page": "options/options.html",
