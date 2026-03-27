@@ -25,6 +25,37 @@ When you search Google, this extension automatically searches your Karakeep inst
 
 Search on Google. If you have matching bookmarks in Karakeep, they'll appear in the right column. No sidebar needed.
 
+## Development
+
+### Building
+
+```bash
+npm install
+npm run build
+```
+
+This creates `karakeep-search-1.0.xpi` for distribution.
+
+### Signing (for distribution)
+
+To create a signed extension for regular Firefox:
+
+1. Get API keys from https://addons.mozilla.org/en-US/developers/addon/api/key/
+2. Set environment variables:
+   ```bash
+   export WEB_EXT_API_KEY=your-jwt-issuer
+   export WEB_EXT_API_SECRET=your-jwt-secret
+   ```
+3. Run: `npm run sign`
+
+The signed .xpi will be in `web-ext-artifacts/`.
+
+### Linting
+
+```bash
+npm run lint
+```
+
 ## License
 
 MIT

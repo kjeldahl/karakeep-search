@@ -4,12 +4,15 @@
   "description": "Firefox extension for Karakeep bookmark search on Google",
   "scripts": {
     "test": "vitest run",
-    "build": "node scripts/build.js"
+    "build": "node scripts/build.js",
+    "sign": "web-ext sign --source-dir . --artifacts-dir ./web-ext-artifacts",
+    "lint": "web-ext lint --source-dir ."
   },
   "keywords": ["firefox", "extension", "karakeep", "bookmarks"],
   "author": "Jacob Kjeldahl",
   "license": "MIT",
   "devDependencies": {
-    "vitest": "^4.1.2"
+    "vitest": "^4.1.2",
+    "web-ext": "^8.0.0"
   }
 }
